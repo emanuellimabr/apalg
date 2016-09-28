@@ -2,6 +2,7 @@ import os
 import sys
 
 ##########################   VARIAVEIS GLOBAIS   #################################
+debug = False
 arestas = 0
 vertices = 0
 partida = 0
@@ -35,18 +36,22 @@ def printOrganizado():
 		print "Vertice: " + str(i)
 		for j in xrange(0,len(list_adj[i])):
 			print "\tArestas:  " + str(list_adj[i][j])
+
 #	--------------------- Todos caminhos  ---------------------------------------- #
 # percorre o grafo definindo todos os caminhos sem repetir vertices e voltando a partida#
-def do(atual):
-	global visitados,caminhos
+def todosCaminhos(atual,caminho,peso):
+	global visitados, caminhos
+	caminho = caminho + str(atual) + ">"
 	for x in xrange(0,len(list_adj[atual])):
-		if 0 not in visitados and ligadoPartida(atual):
+		pesoFinal,logica = ligadoPartida(atual)
+		if 0 not in visitados and logica:
+			caminhos.append(caminho + ":" + str(peso+pesoFinal))
 			break
 		visitados[atual]=1
 		if visitados[list_adj[atual][x]["destino"]] == 0:
-			print "Indo para: " + str(list_adj[atual][x]["destino"])
-			do(list_adj[atual][x]["destino"])
-			print "Voltando para: " + str(atual)
+			# print "Indo para: " + str(list_adj[atual][x]["destino"])
+			todosCaminhos(list_adj[atual][x]["destino"],caminho,list_adj[atual][x]["peso"]+peso)
+			# print "Voltando para: " + str(atual)
 			visitados[list_adj[atual][x]["destino"]] = 0
 
 #	--------------------- verifica se pode finalizar  --------------------------------- #
@@ -55,12 +60,23 @@ def ligadoPartida(atual):
 	global partida
 	for x in xrange(0,len(list_adj[atual])):
 		if list_adj[atual][x]["destino"] == partida:
-			return True
-	return False
+			return list_adj[atual][x]["peso"],True
+	return 0,False
+#	--------------------- Menor caminho  --------------------------------- #
+#   define menor caminho dentro dos caminhos que chegam ate a partida      #
+def menorCaminho():
+	for x in xrange(0,len(caminhos)):
+		menorPeso = 0
+		menorCaminho = ""
+		caminho,peso = caminhos[x].split(":")
+		if menorPeso < peso:
+			menorPeso = peso
+			menorCaminho = caminho
+	return caminho
 
 ######################       MAIN ()         ######################################
 if __name__ == '__main__':
-	if len(sys.argv) != 2:
+	if len(sys.argv) < 2:
 		print "\nFALTA INFORMAR PONTO DE PARTIDA\n"
 		sys.exit()
 	else:
@@ -69,14 +85,21 @@ if __name__ == '__main__':
 		if int(partida)>vertices-1:
 			print "\nO VERTICE INDIDADO NAO EXISTE\n"
 			sys.exit()
-		else:
-			print "\nARQUIVO DE ENTRADA LIDO\n"
-			print "Numero de Vertices:  " + str(vertices)
-			print "Numero de Arestas :  " + str(arestas)
-			printOrganizado()
-			print "\nBuscando Caminhos"
-			do(partida)
 
-			print "MELHOR CAMINHO:  " + str(caminhos)
+		else:
+			if len(sys.argv) == 3:
+				debug = bool(sys.argv[2])
+			if debug:
+				print "\n>>DEBUG ON<<"
+				print "\nARQUIVO DE ENTRADA LIDO\n"
+				print "Numero de Vertices:  " + str(vertices)
+				print "Numero de Arestas :  " + str(arestas)
+				printOrganizado()
+			if debug:
+				print "\nBUSCANDO CAMINHOS\n"
+			todosCaminhos(partida,"",0)
+			if debug:
+				print "Caminhos:  " + str(caminhos) + "\n"
+			print menorCaminho()
 
 ################################################################################
