@@ -16,7 +16,11 @@ visitados = []
 # 	--------------------- Ler arquivo  -----------------------------------------   #
 # ler arquivo e cria estrutura do grafos com array list e dicionarios
 def read(arquivo):
-	file = open(arquivo, 'r')
+	try:
+		file = open(arquivo , 'r')
+	except IOError:
+		print "Erro ao abrir arquivo:", arquivo
+		sys.exit()
 	
 	global arestas, vertices, list_adj, visitados
 
