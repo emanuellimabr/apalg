@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 import os
 import sys
 
@@ -65,14 +68,15 @@ def ligadoPartida(atual):
 #	--------------------- Menor caminho  --------------------------------- #
 #   define menor caminho dentro dos caminhos que chegam ate a partida      #
 def menorCaminho():
-	for x in xrange(0,len(caminhos)):
-		menorPeso = 0
-		menorCaminho = ""
-		caminho,peso = caminhos[x].split(":")
-		if menorPeso < peso:
+	global caminhos
+	xpath, menorPeso = caminhos[0].split(":")
+	menorCaminho = ""
+	for x in xrange(0,len(caminhos)):	
+		caminho,peso = caminhos[x].split(":")		
+		if int(peso) <= int(menorPeso):			
 			menorPeso = peso
-			menorCaminho = caminho
-	return caminho
+			menorCaminho = caminho			
+	return str(menorCaminho) + '\tCusto total:' + str(menorPeso)
 
 ######################       MAIN ()         ######################################
 if __name__ == '__main__':
@@ -97,9 +101,13 @@ if __name__ == '__main__':
 				printOrganizado()
 			if debug:
 				print "\nBUSCANDO CAMINHOS\n"
-			todosCaminhos(partida,"",0)
+			todosCaminhos(partida,"0",0)
 			if debug:
-				print "Caminhos:  " + str(caminhos) + "\n"
-			print menorCaminho()
+				if not caminhos:
+					print "Nao foram encontrados caminhos!!"
+				else:
+					print "Caminhos:  " + str(caminhos) + "\n"
+					print "Menor caminho encontrado: " + menorCaminho()
+			
 
 ################################################################################
