@@ -15,8 +15,8 @@ visitados = []
 ##########################   FUNCOES    ############################################
 # 	--------------------- Ler arquivo  -----------------------------------------   #
 # ler arquivo e cria estrutura do grafos com array list e dicionarios
-def read():
-	file = open('grafo.txt', 'r')
+def read(arquivo):
+	file = open(arquivo, 'r')
 	
 	global arestas, vertices, list_adj, visitados
 
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 		sys.exit()
 	else:
 		partida = int(sys.argv[1])
-		read()
+		read(raw_input('Nome do Arquivo(com extensao): '))
 		if int(partida)>vertices-1:
 			print "\nO VERTICE INDIDADO NAO EXISTE\n"
 			sys.exit()
