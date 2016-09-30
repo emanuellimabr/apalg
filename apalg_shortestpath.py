@@ -16,7 +16,7 @@ visitados = []
 # 	--------------------- Ler arquivo  -----------------------------------------   #
 # ler arquivo e cria estrutura do grafos com array list e dicionarios
 def read():
-	file = open(os.path.dirname(os.path.realpath(__file__)) + "/grafo5.txt")
+	file = open('grafo.txt', 'r')
 	
 	global arestas, vertices, list_adj, visitados
 
